@@ -1,0 +1,28 @@
+{
+  "name": "bun-sea",
+  "module": "main.ts",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@types/bun": "latest",
+    "@types/commander": "^2.12.5",
+    "@types/pino": "^7.0.5",
+    "@types/pino-pretty": "^5.0.0",
+    "eslint": "^9.23.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin": "^1.0.1",
+    "globals": "^16.0.0",
+    "pino-pretty": "^13.0.0",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.29.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/log4js": "^2.3.5",
+    "commander": "^13.1.0",
+    "pino": "^9.6.0"
+  }
+}

@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+env:
+  PROJECT_NAME: bun-sea
+
+tasks:
+  init:
+    silent: true
+    cmds:
+      - bun install
+    sources:
+      - node_modules
+    generates:
+      - bun.lock
+
+  build:
+    silent: true
+    desc: "Build the SEA for bun-sea"
+    deps:
+      - init
+    cmds:
+      - mkdir -p ${XDG_BIN_HOME:-~/.local/bin}
+      - |
+        # dynamically select target based on TARGET env variable, default to bun-darwin-arm64 if not set
+        TEMP_OUTFILE=./bun-sea.tmp
+        bun build --compile --minify --bytecode --sourcemap src/main.ts --target {{.TARGET}} --outfile $TEMP_OUTFILE
+        cp $TEMP_OUTFILE {{.OUTFILE}}
+        rm $TEMP_OUTFILE
+    sources:
+      - src/**/*.ts
+    generates:
+      - ~/.local/bin/{{.OUTFILE}}
+    vars:
+      TARGET:
+        sh: |
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]'); \
+          ARCH=$(uname -m); \
+          if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi; \
+          echo "bun-${OS}-${ARCH}"
+      OUTFILE:
+        sh: echo ${XDG_BIN_HOME:-~/.local/bin}/$PROJECT_NAME
+
+  run:
+    desc: "Run the SEA for bun-sea"
+    deps:
+      - build
+    cmds:
+      - echo "Running SEA for $PROJECT_NAME..."
+      - ~/.local/bin/bun-sea hello
+    vars:
+      TARGET:
+        sh: |
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]'); \
+          ARCH=$(uname -m); \
+          if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi; \
+          echo "bun-${OS}-${ARCH}"
+      OUTFILE:
+        sh: echo ${XDG_BIN_HOME:-~/.local/bin}/$PROJECT_NAME
