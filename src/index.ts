@@ -1,4 +1,4 @@
 import { $ } from "bun";
-import { hello } from "./bin/hello";
+import { hello } from "@/bin/hello";
 
 export { $, hello };
