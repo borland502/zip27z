@@ -1,9 +1,9 @@
 import * as globals from "./index";
 
 Object.assign(globalThis, {
-	...globals,
+  ...globals,
 });
 
 declare global {
-	const $: typeof globals.$;
+  const $: typeof globals.$;
 }
