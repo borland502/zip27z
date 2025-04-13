@@ -1,10 +1,10 @@
-import { pino } from "pino";
+import winston from "winston";
 
-export const logger = pino({
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-    },
-  },
+export const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  ),
+  transports: [new winston.transports.Console()],
 });
