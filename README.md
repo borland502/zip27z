@@ -8,7 +8,7 @@ Provides a template project with a file layout and library selection
 
 1. [Bun](https://bun.sh/docs/bundler/executables)
 2. [Commander](https://github.com/tj/commander.js/tree/master)
-3. [Pino](https://github.com/pinojs/pino/tree/main)
+3. [Winston](https://github.com/winstonjs/winston)
 4. [Task](https://taskfile.dev)
 
 ## References
