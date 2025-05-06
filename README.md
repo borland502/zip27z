@@ -4,6 +4,25 @@ Bun Single Executable Application Template
 
 Provides a template project with a file layout and library selection
 
+## Code Execution
+
+### From Source
+
+```shell
+    bun run src/main.ts hello
+```
+
+### From Binary (~/.local/bin assumed to be in path)
+
+```shell
+    task build && task run
+```
+
+### From XDG_BIN_HOME
+```shell
+    bun-sea hello
+```
+
 ## Libraries
 
 1. [Bun](https://bun.sh/docs/bundler/executables)
