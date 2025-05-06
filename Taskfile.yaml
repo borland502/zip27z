@@ -78,4 +78,3 @@ tasks:
           echo "bun-${OS}-${ARCH}"
       OUTFILE:
         sh: echo ${XDG_BIN_HOME:-~/.local/bin}/$PROJECT_NAME
-

@@ -7,9 +7,8 @@ Convert a root directory and all subdirectories containing zip files into 7z fil
 ### From Binary
 
 ```shell
-    task build && ~/.local/bin/zip27z /mnt/c/Users/jhett/Downloads/ 
+    task build && ~/.local/bin/zip27z /mnt/c/Users/jhett/Downloads/
 ```
-
 
 ## Libraries
 

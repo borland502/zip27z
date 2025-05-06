@@ -2,13 +2,14 @@ import "@/globals";
 
 import { Command } from "commander";
 import { hello } from "@/index";
-import { readdirSync, statSync, existsSync, unlinkSync } from "fs";
+import { readdirSync, statSync, existsSync, unlinkSync, mkdtempSync, rmSync } from "fs";
 import { join, extname, dirname, basename } from "path";
 import { spawnSync } from "child_process";
+import { tmpdir } from "os";
 
 export const program = new Command();
 
-program.name("zip27z").description("Tool for converting ZIP archives to 7Z format").version("0.0.1");
+program.name("zip27z").description("Tool for converting ZIP archives to 7Z format").version("0.0.2");
 
 // Function to find all .zip files recursively
 function findZipFiles(dir: string): string[] {
@@ -28,7 +29,7 @@ function findZipFiles(dir: string): string[] {
       }
     }
   } catch (err) {
-    console.error(`Error reading directory ${dir}:`, err);
+    logger.error(`Error reading directory ${dir}:`, err);
   }
 
   return results;
@@ -46,15 +47,62 @@ function check7zIntegrity(archivePath: string): boolean {
   return result.status === 0;
 }
 
-// Function to convert zip to 7z
+/**
+ * Converts a ZIP file to 7Z format.
+ *
+ * This function takes a ZIP file, extracts its contents to a temporary directory,
+ * then compresses those contents into a 7Z file using maximum compression level (9).
+ * The temporary directory is automatically cleaned up after the operation.
+ *
+ * @param zipPath - The file path of the ZIP file to be converted
+ * @returns The path to the created 7Z file if successful, or null if conversion fails
+ *
+ * @example
+ * const result = convertZipTo7z('/path/to/archive.zip');
+ * if (result) {
+ *   logger.log(`Successfully converted to ${result}`);
+ * }
+ */
 function convertZipTo7z(zipPath: string): string | null {
   const dir = dirname(zipPath);
   const fileNameWithoutExt = basename(zipPath, ".zip");
   const outputPath = join(dir, `${fileNameWithoutExt}.7z`);
 
-  const result = spawnSync("7z", ["a", "-mx=9", outputPath, zipPath]);
+  // Create a unique temporary directory for extraction
+  const tempDir = mkdtempSync(join(tmpdir(), "zip27z-"));
 
-  return result.status === 0 ? outputPath : null;
+  try {
+    logger.info(`Extracting ${zipPath} to temporary directory...`);
+    // Extract the zip file to the temp directory
+    const extractResult = spawnSync("unzip", ["-q", zipPath, "-d", tempDir]);
+    if (extractResult.status !== 0) {
+      logger.error(`Failed to extract ${zipPath}`);
+      return null;
+    }
+
+    logger.info(`Compressing extracted contents to 7Z format...`);
+    // Compress the extracted contents to 7z format
+    const compressResult = spawnSync("7z", ["a", "-mx=9", outputPath, "."], {
+      cwd: tempDir,
+    });
+
+    if (compressResult.status !== 0) {
+      logger.error(`Failed to compress contents to ${outputPath}`);
+      return null;
+    }
+
+    return outputPath;
+  } catch (error) {
+    logger.error(`Error during conversion: ${error}`);
+    return null;
+  } finally {
+    // Clean up the temporary directory
+    try {
+      rmSync(tempDir, { recursive: true, force: true });
+    } catch (error) {
+      logger.error(`Failed to clean up temporary directory ${tempDir}: ${error}`);
+    }
+  }
 }
 
 // Function to get file size in bytes
@@ -85,7 +133,7 @@ async function convertAllZipsTo7z(rootDir: string): Promise<void> {
     // Check input zip integrity
     logger.info(`Checking integrity of source file...`);
     if (!checkZipIntegrity(zipFile)) {
-      console.error(`❌ Integrity check failed for input file: ${zipFile}. Skipping.`);
+      logger.error(`❌ Integrity check failed for input file: ${zipFile}. Skipping.`);
       totalFailed++;
       continue;
     }
@@ -97,7 +145,7 @@ async function convertAllZipsTo7z(rootDir: string): Promise<void> {
     logger.info(`Converting to 7Z format...`);
     const outputFile = convertZipTo7z(zipFile);
     if (!outputFile || !existsSync(outputFile)) {
-      console.error(`❌ Failed to convert: ${zipFile}`);
+      logger.error(`❌ Failed to convert: ${zipFile}`);
       totalFailed++;
       continue;
     }
@@ -105,11 +153,11 @@ async function convertAllZipsTo7z(rootDir: string): Promise<void> {
     // Check output 7z integrity
     logger.info(`Checking integrity of converted file...`);
     if (!check7zIntegrity(outputFile)) {
-      console.error(`❌ Integrity check failed for output file: ${outputFile}. Removing.`);
+      logger.error(`❌ Integrity check failed for output file: ${outputFile}. Removing.`);
       try {
         unlinkSync(outputFile);
       } catch (e) {
-        console.error(`Failed to remove corrupted output file: ${outputFile}`, e);
+        logger.error(`Failed to remove corrupted output file: ${outputFile}`, e);
       }
       totalFailed++;
       continue;
@@ -153,7 +201,7 @@ program
     try {
       await convertAllZipsTo7z(directory);
     } catch (error) {
-      console.error("Error during conversion:", error);
+      logger.error("Error during conversion:", error);
       process.exit(1);
     }
   });
