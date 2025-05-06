@@ -1,11 +1,10 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
-
 # Get the variable PROJECT_NAME from the environment or default to "bun_sea"
 vars:
   PROJECT_NAME:
-    sh: echo ${PROJECT_NAME:-bun-sea}
+    sh: echo ${PROJECT_NAME:-zip27z}
   XDG_BIN_HOME:
     sh: echo ${XDG_BIN_HOME:-~/.local/bin}
 
@@ -80,19 +79,3 @@ tasks:
       OUTFILE:
         sh: echo ${XDG_BIN_HOME:-~/.local/bin}/$PROJECT_NAME
 
-  run:
-    desc: "Run the SEA for $PROJECT_NAME"
-    deps:
-      - build
-    cmds:
-      - echo "Running SEA for $PROJECT_NAME..."
-      - ~/.local/bin/$PROJECT_NAME hello
-    vars:
-      TARGET:
-        sh: |
-          OS=$(uname -s | tr '[:upper:]' '[:lower:]'); \
-          ARCH=$(uname -m); \
-          if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi; \
-          echo "bun-${OS}-${ARCH}"
-      OUTFILE:
-        sh: echo ${XDG_BIN_HOME:-~/.local/bin}/$PROJECT_NAME

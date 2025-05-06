@@ -1,27 +1,15 @@
-# bun-sea
+# zip27z
 
-Bun Single Executable Application Template
-
-Provides a template project with a file layout and library selection
+Convert a root directory and all subdirectories containing zip files into 7z files.
 
 ## Code Execution
 
-### From Source
+### From Binary
 
 ```shell
-    bun run src/main.ts hello
+    task build && ~/.local/bin/zip27z /mnt/c/Users/jhett/Downloads/ 
 ```
 
-### From Binary (~/.local/bin assumed to be in path)
-
-```shell
-    task build && task run
-```
-
-### From XDG_BIN_HOME
-```shell
-    bun-sea hello
-```
 
 ## Libraries
 
@@ -32,5 +20,5 @@ Provides a template project with a file layout and library selection
 
 ## References
 
-- [Bunmagic](https://github.com/bunmagic/bunmagic/tree/main)
-- [Commander-template](https://github.com/Qw4z1/commander-template/tree/main)
+- [ZIP File Format Specification](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
+- [Compression Algorithms](https://en.wikipedia.org/wiki/Data_compression)
