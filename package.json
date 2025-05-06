@@ -1,0 +1,37 @@
+{
+  "name": "bun-sea",
+  "module": "main.ts",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@types/bun": "latest",
+    "@types/commander": "^2.12.5",
+    "@types/winston": "^2.4.4",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin": "^1.0.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "globals": "^16.0.0",
+    "jiti": "^2.4.2",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.29.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/log4js": "^2.3.5",
+    "commander": "^13.1.0",
+    "winston": "^3.0.0"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier . --write \"**/*.{js,jsx,mjs,ts,tsx,json,md,yaml}\"",
+    "test": "bun test"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}
