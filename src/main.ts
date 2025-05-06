@@ -1,7 +1,7 @@
-import "globals";
+import "@/globals";
 
 import { Command } from "commander";
-import { hello } from "./index";
+import { hello } from "@/index";
 
 export const program = new Command();
 

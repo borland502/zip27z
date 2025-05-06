@@ -137,3 +137,6 @@ dist
 
 # Taskfiles.dev
 .task
+
+# Bun cache
+.bun
